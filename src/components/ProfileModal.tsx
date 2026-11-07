@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { X, Save, User, GraduationCap, Trophy, CheckCircle2, Upload } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import type { UserProfile } from '../utils/types';
@@ -22,6 +22,9 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, cur
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  // Dosya input'una erişmek için ref oluşturuyoruz
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (currentUser) {
@@ -47,7 +50,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, cur
     const fileName = `${currentUser.id}-${Math.random()}.${fileExt}`;
     const filePath = `${fileName}`;
 
-    // Supabase Storage'a yükle
     const { error: uploadError } = await supabase.storage
       .from('avatars')
       .upload(filePath, file);
@@ -58,7 +60,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, cur
       return;
     }
 
-    // Yüklenen fotoğrafın public URL'sini al
     const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
     setFormData({ ...formData, avatar_url: data.publicUrl });
     setIsUploading(false);
@@ -129,11 +130,23 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, cur
                 )}
               </div>
               <div>
-                <label className="cursor-pointer bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-2 px-4 rounded-xl flex items-center gap-2 transition-colors">
+                {/* Label yerine doğrudan tıklanabilir bir div/buton kullanıyoruz */}
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  className="cursor-pointer bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-2 px-4 rounded-xl flex items-center gap-2 transition-colors"
+                >
                   <Upload className="w-3.5 h-3.5" />
                   {isUploading ? 'Yükleniyor...' : 'Fotoğraf Yükle'}
-                  <input type="file" accept="image/*" onChange={handleAvatarUpload} className="hidden" disabled={isUploading} />
-                </label>
+                </div>
+                {/* Gizli dosya input'u */}
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  accept="image/*"
+                  onChange={handleAvatarUpload}
+                  className="hidden"
+                  disabled={isUploading}
+                />
               </div>
             </div>
 
