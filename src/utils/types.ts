@@ -1,5 +1,3 @@
-// src/utils/types.ts
-
 export type UserRole = 'yarismaci' | 'kaptan' | 'danisman' | 'yonetici' | 'misafir';
 
 export interface UserProfile {
@@ -13,7 +11,7 @@ export interface UserProfile {
     phone?: string;
     bio?: string;
     skills?: string[];
-    avatarUrl?: string; // <-- Eklendi
+    avatarUrl?: string;
     createdDate?: string;
 }
 
@@ -74,25 +72,5 @@ export interface ForumReply {
     content: string;
     is_accepted_solution: boolean;
     votes: number;
-    created_at: string;
-}
-
-export interface TeamFinderPost {
-    id: string;
-    type: 'looking_for_team' | 'recruiting_members';
-    author_id: string;
-    author_name: string;
-    author_team?: string;
-    author_institution?: string;
-    title: string;
-    competition?: string;
-    skills?: string[];
-    description: string;
-    looking_for_role?: string;
-    location?: string;
-    team_size_current?: number;
-    team_size_target?: number;
-    contact_preference?: 'chat' | 'email' | 'phone';
-    contact_info?: string;
     created_at: string;
 }
