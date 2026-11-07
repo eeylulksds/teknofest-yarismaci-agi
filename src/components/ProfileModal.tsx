@@ -23,7 +23,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, cur
   const [isUploading, setIsUploading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  // Dosya input'una erişmek için ref oluşturuyoruz
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -118,7 +117,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, cur
           )}
 
           <form onSubmit={handleSave} className="space-y-4 text-sm">
-            {/* Profil Fotoğrafı */}
             <div className="flex items-center gap-4 mb-4">
               <div className="w-16 h-16 rounded-full bg-slate-200 overflow-hidden border-2 border-slate-100">
                 {formData.avatar_url ? (
@@ -130,7 +128,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, cur
                 )}
               </div>
               <div>
-                {/* Label yerine doğrudan tıklanabilir bir div/buton kullanıyoruz */}
                 <div
                   onClick={() => fileInputRef.current?.click()}
                   className="cursor-pointer bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-2 px-4 rounded-xl flex items-center gap-2 transition-colors"
@@ -138,7 +135,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, cur
                   <Upload className="w-3.5 h-3.5" />
                   {isUploading ? 'Yükleniyor...' : 'Fotoğraf Yükle'}
                 </div>
-                {/* Gizli dosya input'u */}
                 <input
                   type="file"
                   ref={fileInputRef}

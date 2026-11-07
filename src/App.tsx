@@ -41,6 +41,7 @@ function App() {
         institution: profile.institution,
         bio: profile.bio,
         skills: profile.skills,
+        avatarUrl: profile.avatar_url, // <-- BURAYI EKLEDİK
       });
     }
     setIsLoadingSession(false);
@@ -81,7 +82,19 @@ function App() {
       </main>
 
       <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} onLogin={(user) => setCurrentUser(user)} />
-      <ProfileModal isOpen={isProfileModalOpen} onClose={() => setIsProfileModalOpen(false)} currentUser={currentUser} onUpdate={() => window.location.reload()} />
+
+      <ProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        currentUser={currentUser}
+        onUpdate={async () => {
+          // Profil kaydedildiğinde kullanıcı verisini Supabase'den tekrar çek
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session?.user) {
+            await fetchProfile(session.user.id, session.user.email);
+          }
+        }}
+      />
     </div>
   );
 }
