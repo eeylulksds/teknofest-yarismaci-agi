@@ -38,23 +38,23 @@ export const CompetitionsView: React.FC<CompetitionsViewProps> = ({ currentUser 
     <div className="max-w-7xl mx-auto px-4 py-8">
 
       {/* Üst Banner */}
-      <div className="rounded-3xl bg-slate-900 dark:bg-slate-900 text-white p-6 sm:p-10 shadow-lg mb-8 relative overflow-hidden border border-slate-800">
+      <div className="rounded-3xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white p-6 sm:p-10 shadow-sm mb-8 relative overflow-hidden transition-colors">
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-4 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-sky-200 text-xs font-bold border border-white/15">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white dark:bg-white/10 text-slate-600 dark:text-sky-200 text-xs font-bold border border-slate-200 dark:border-white/15">
               <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
               TEKNOFEST 2026 Resmi Kategori ve Şartnameler
             </div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight">
-              Teknoloji Yarışmaları <span className="text-sky-400">ve Şartnameler</span>
+              Teknoloji Yarışmaları <span className="text-sky-600 dark:text-sky-400">ve Şartnameler</span>
             </h1>
-            <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
               Resmi TEKNOFEST teknoloji yarışmaları, şartnameleri, başvuru takvimleri ve ödül detayları. Başvurularınızı doğrudan aşağıdaki portal üzerinden gerçekleştirebilirsiniz.
             </p>
 
             <div className="flex flex-wrap gap-3 pt-2">
-              <a href="https://teknofest.org" target="_blank" rel="noreferrer" className="px-5 py-2.5 rounded-xl bg-white text-slate-900 font-bold text-sm shadow-md hover:bg-slate-100 transition-all flex items-center gap-2">
-                <ExternalLink className="w-4 h-4 text-red-600" /> teknofest.org
+              <a href="https://teknofest.org" target="_blank" rel="noreferrer" className="px-5 py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-sm shadow-md hover:bg-slate-800 dark:hover:bg-slate-100 transition-all flex items-center gap-2">
+                <ExternalLink className="w-4 h-4 text-red-600 dark:text-red-600" /> teknofest.org
               </a>
               <a href="https://t3kys.com" target="_blank" rel="noreferrer" className="px-5 py-2.5 rounded-xl bg-red-600 text-white font-bold text-sm shadow-md hover:bg-red-700 transition-all flex items-center gap-2">
                 <ExternalLink className="w-4 h-4" /> KYS Başvuru Portalı
@@ -63,13 +63,13 @@ export const CompetitionsView: React.FC<CompetitionsViewProps> = ({ currentUser 
           </div>
 
           <div className="shrink-0 flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-            <div className="p-4 rounded-2xl bg-white/10 border border-white/10 text-center flex-1">
-              <span className="block text-3xl font-black text-white">{competitions.length}</span>
-              <span className="text-[11px] font-semibold text-slate-300">Aktif Yarışma</span>
+            <div className="p-4 rounded-2xl bg-white dark:bg-white/10 border border-slate-200 dark:border-white/10 text-center flex-1">
+              <span className="block text-3xl font-black text-slate-900 dark:text-white">{competitions.length}</span>
+              <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">Aktif Yarışma</span>
             </div>
-            <div className="p-4 rounded-2xl bg-white/10 border border-white/10 text-center flex-1">
-              <span className="block text-3xl font-black text-white">12</span>
-              <span className="text-[11px] font-semibold text-slate-300">Ana Kategori</span>
+            <div className="p-4 rounded-2xl bg-white dark:bg-white/10 border border-slate-200 dark:border-white/10 text-center flex-1">
+              <span className="block text-3xl font-black text-slate-900 dark:text-white">12</span>
+              <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">Ana Kategori</span>
             </div>
           </div>
         </div>
