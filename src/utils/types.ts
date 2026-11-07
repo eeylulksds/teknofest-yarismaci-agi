@@ -13,6 +13,7 @@ export interface UserProfile {
     phone?: string;
     bio?: string;
     skills?: string[];
+    avatarUrl?: string; // <-- Eklendi
     createdDate?: string;
 }
 
