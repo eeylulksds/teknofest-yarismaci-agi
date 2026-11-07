@@ -60,77 +60,85 @@ export const CompetitionCalendar: React.FC<CompetitionCalendarProps> = ({ compet
 
   return (
     <div className="space-y-6">
+      {/* Kontrol Çubuğu */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <button onClick={handlePrevMonth} className="p-2 rounded-lg bg-white border border-slate-200 hover:bg-slate-50">
-            <ChevronLeft className="w-4 h-4" />
+          <button onClick={handlePrevMonth} className="p-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+            <ChevronLeft className="w-4 h-4 text-slate-600 dark:text-slate-300" />
           </button>
-          <h2 className="text-xl font-bold text-slate-900 min-w-[150px] text-center">
+          <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white min-w-[150px] text-center">
             {FULL_MONTH_NAMES_TR[currentDate.getMonth()]} {currentDate.getFullYear()}
           </h2>
-          <button onClick={handleNextMonth} className="p-2 rounded-lg bg-white border border-slate-200 hover:bg-slate-50">
-            <ChevronRight className="w-4 h-4" />
+          <button onClick={handleNextMonth} className="p-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+            <ChevronRight className="w-4 h-4 text-slate-600 dark:text-slate-300" />
           </button>
-          <button onClick={handleGoToToday} className="ml-2 px-3 py-1.5 text-xs font-bold bg-slate-100 rounded-lg hover:bg-slate-200">
+          <button onClick={handleGoToToday} className="ml-2 px-3 py-1.5 text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
             Bugün
           </button>
         </div>
-        <button onClick={handleExportAll} className="flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-red-600 px-3 py-2 rounded-lg bg-white border border-slate-200">
+        <button onClick={handleExportAll} className="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-400 px-3 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 transition-colors">
           <Download className="w-4 h-4" /> Tümünü Takvime Aktar (.ics)
         </button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-          <div className="grid grid-cols-7 bg-slate-50 border-b border-slate-200">
-            {weekdayHeaders.map((day) => (
-              <div key={day} className="py-2 text-center text-xs font-bold text-slate-600">{day}</div>
-            ))}
-          </div>
-          <div className="grid grid-cols-7 divide-x divide-y divide-slate-100">
-            {monthCells.map((cell, idx) => {
-              const isSelected = cell.dateStr === selectedDateStr;
-              return (
-                <div
-                  key={idx}
-                  onClick={() => setSelectedDateStr(cell.dateStr)}
-                  className={`min-h-[100px] p-1.5 flex flex-col transition-colors cursor-pointer ${!cell.isCurrentMonth ? 'bg-slate-50/50' : 'bg-white hover:bg-slate-50'
-                    } ${isSelected ? 'ring-2 ring-inset ring-red-500' : ''}`}
-                >
-                  <div className="flex justify-between items-center mb-1">
-                    <span className={`text-xs font-bold ${cell.isToday ? 'bg-red-600 text-white w-5 h-5 flex items-center justify-center rounded-full' : 'text-slate-700'}`}>
-                      {cell.dayNumber}
-                    </span>
-                    {cell.events.length > 0 && <span className="w-1.5 h-1.5 rounded-full bg-red-500" />}
-                  </div>
-                  <div className="space-y-1 overflow-hidden">
-                    {cell.events.slice(0, 2).map(ev => (
-                      <div key={ev.id} className="text-[10px] bg-slate-100 rounded px-1 py-0.5 truncate text-slate-700 font-medium">
-                        {ev.title}
+        {/* Sol Taraf: Takvim */}
+        <div className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm transition-colors">
+          {/* Yatay Kaydırılabilir Takvim Izgarası */}
+          <div className="overflow-x-auto">
+            <div className="min-w-[600px] sm:min-w-0">
+              <div className="grid grid-cols-7 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
+                {weekdayHeaders.map((day) => (
+                  <div key={day} className="py-2 text-center text-xs font-bold text-slate-600 dark:text-slate-400">{day}</div>
+                ))}
+              </div>
+              <div className="grid grid-cols-7 divide-x divide-y divide-slate-100 dark:divide-slate-800/80">
+                {monthCells.map((cell, idx) => {
+                  const isSelected = cell.dateStr === selectedDateStr;
+                  return (
+                    <div
+                      key={idx}
+                      onClick={() => setSelectedDateStr(cell.dateStr)}
+                      className={`min-h-[80px] sm:min-h-[100px] p-1 sm:p-1.5 flex flex-col transition-colors cursor-pointer ${!cell.isCurrentMonth ? 'bg-slate-50/50 dark:bg-slate-950/50' : 'bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800'
+                        } ${isSelected ? 'ring-2 ring-inset ring-red-500' : ''}`}
+                    >
+                      <div className="flex justify-between items-center mb-1">
+                        <span className={`text-[10px] sm:text-xs font-bold ${cell.isToday ? 'bg-red-600 text-white w-5 h-5 flex items-center justify-center rounded-full' : 'text-slate-700 dark:text-slate-300'}`}>
+                          {cell.dayNumber}
+                        </span>
+                        {cell.events.length > 0 && <span className="w-1.5 h-1.5 rounded-full bg-red-500" />}
                       </div>
-                    ))}
-                    {cell.events.length > 2 && <div className="text-[9px] text-slate-400 pl-1">+{cell.events.length - 2} daha</div>}
-                  </div>
-                </div>
-              );
-            })}
+                      <div className="space-y-1 overflow-hidden">
+                        {cell.events.slice(0, 2).map(ev => (
+                          <div key={ev.id} className="text-[9px] sm:text-[10px] bg-slate-100 dark:bg-slate-800 rounded px-1 py-0.5 truncate text-slate-700 dark:text-slate-300 font-medium">
+                            {ev.title}
+                          </div>
+                        ))}
+                        {cell.events.length > 2 && <div className="text-[8px] sm:text-[9px] text-slate-400 dark:text-slate-500 pl-1">+{cell.events.length - 2} daha</div>}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="lg:col-span-1 bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
-          <h3 className="font-bold text-slate-900 border-b border-slate-100 pb-3">
+        {/* Sağ Taraf: Seçili Gün Detayı */}
+        <div className="lg:col-span-1 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 sm:p-5 shadow-sm space-y-4 transition-colors">
+          <h3 className="font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3 text-sm sm:text-base">
             {formatTurkishDate(selectedDateStr)}
           </h3>
           {selectedDateEvents.length === 0 ? (
-            <p className="text-xs text-slate-500 text-center py-10">Bu tarihte etkinlik bulunmuyor.</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 text-center py-10">Bu tarihte etkinlik bulunmuyor.</p>
           ) : (
             <div className="space-y-3">
               {selectedDateEvents.map(ev => (
-                <div key={ev.id} onClick={() => onSelectCompetition(ev.competition)} className="p-3 rounded-xl border border-slate-100 bg-slate-50 hover:border-red-200 cursor-pointer transition-colors">
-                  <span className="text-[10px] font-bold px-2 py-0.5 bg-sky-100 text-sky-700 rounded-full">{ev.category}</span>
-                  <h4 className="font-bold text-sm text-slate-900 mt-2">{ev.title}</h4>
-                  <p className="text-xs text-slate-600 mt-1">{ev.typeLabel}</p>
-                  <p className="text-[11px] text-slate-500 mt-1">{ev.daysRemaining} gün kaldı</p>
+                <div key={ev.id} onClick={() => onSelectCompetition(ev.competition)} className="p-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 hover:border-red-200 dark:hover:border-red-900 cursor-pointer transition-colors">
+                  <span className="text-[10px] font-bold px-2 py-0.5 bg-sky-100 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 rounded-full">{ev.category}</span>
+                  <h4 className="font-bold text-sm text-slate-900 dark:text-white mt-2">{ev.title}</h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">{ev.typeLabel}</p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-500 mt-1">{ev.daysRemaining} gün kaldı</p>
                 </div>
               ))}
             </div>

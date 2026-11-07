@@ -75,16 +75,16 @@ export const ForumView: React.FC<ForumViewProps> = ({ currentUser }) => {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 transition-colors">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 dark:text-white">Teknik Forum</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-1">Sorular sor, bilgi paylaş, çözüm bul.</p>
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">Teknik Forum</h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm sm:text-base">Sorular sor, bilgi paylaş, çözüm bul.</p>
         </div>
 
         {currentUser && (
           <button
             onClick={() => setIsNewPostOpen(!isNewPostOpen)}
-            className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-full font-bold text-sm shadow-md transition-colors"
+            className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-full font-bold text-sm shadow-md transition-colors w-full sm:w-auto"
           >
             <Plus className="w-4 h-4" /> Yeni Konu Aç
           </button>
@@ -92,7 +92,7 @@ export const ForumView: React.FC<ForumViewProps> = ({ currentUser }) => {
       </div>
 
       {isNewPostOpen && (
-        <form onSubmit={handleCreatePost} className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm mb-6 space-y-4 transition-colors">
+        <form onSubmit={handleCreatePost} className="bg-white dark:bg-slate-900 p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm mb-6 space-y-4 transition-colors">
           <h3 className="font-bold text-lg text-slate-900 dark:text-white">Yeni Konu Oluştur</h3>
           <input
             type="text"
@@ -100,7 +100,7 @@ export const ForumView: React.FC<ForumViewProps> = ({ currentUser }) => {
             required
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
-            className="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white rounded-xl px-4 py-2 focus:outline-none focus:border-red-500 transition-colors"
+            className="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 transition-colors"
           />
           <textarea
             placeholder="Sorunuzu veya paylaşmak istediğiniz bilgiyi buraya yazın..."
@@ -108,7 +108,7 @@ export const ForumView: React.FC<ForumViewProps> = ({ currentUser }) => {
             rows={4}
             value={newContent}
             onChange={(e) => setNewContent(e.target.value)}
-            className="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white rounded-xl px-4 py-2 focus:outline-none focus:border-red-500 transition-colors"
+            className="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 transition-colors"
           />
           <div className="flex justify-end gap-2">
             <button type="button" onClick={() => setIsNewPostOpen(false)} className="px-4 py-2 text-sm font-bold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors">
@@ -132,8 +132,8 @@ export const ForumView: React.FC<ForumViewProps> = ({ currentUser }) => {
       ) : (
         <div className="space-y-4">
           {posts.map((post) => (
-            <div key={post.id} className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-red-300 dark:hover:border-red-800 transition-colors cursor-pointer">
-              <div className="flex items-center gap-2 mb-2">
+            <div key={post.id} className="bg-white dark:bg-slate-900 p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-red-300 dark:hover:border-red-800 transition-colors cursor-pointer">
+              <div className="flex items-center gap-2 mb-2 flex-wrap">
                 <span className="px-2.5 py-0.5 bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 rounded-md text-[11px] font-bold border border-sky-200 dark:border-sky-800">
                   {post.category}
                 </span>
@@ -141,16 +141,16 @@ export const ForumView: React.FC<ForumViewProps> = ({ currentUser }) => {
                   {new Date(post.created_at).toLocaleDateString('tr-TR')}
                 </span>
               </div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{post.title}</h3>
-              <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-2">{post.content}</p>
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2">{post.title}</h3>
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 line-clamp-2">{post.content}</p>
 
-              <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
                 <div className="flex items-center gap-2">
                   <div className="w-6 h-6 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center font-bold text-slate-600 dark:text-slate-300">
                     {post.author_name?.[0]}
                   </div>
                   <span className="font-semibold text-slate-700 dark:text-slate-300">{post.author_name}</span>
-                  <span>({post.team})</span>
+                  <span className="text-[10px] sm:text-xs">({post.team})</span>
                 </div>
                 <div className="flex items-center gap-4">
                   <span className="flex items-center gap-1"><ThumbsUp className="w-3.5 h-3.5" /> {post.votes}</span>
