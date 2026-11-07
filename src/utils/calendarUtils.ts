@@ -225,7 +225,7 @@ export function downloadIcsFile(filename: string, content: string) {
 }
 
 export function formatListBadgeDate(dateStr: string): { day: number; shortMonthUpper: string } {
-    const [year, month, day] = dateStr.split('-').map(Number);
+    const [_year, month, day] = dateStr.split('-').map(Number);
     const shortMonth = SHORT_MONTH_NAMES_TR[month - 1] || '';
     return {
         day,
