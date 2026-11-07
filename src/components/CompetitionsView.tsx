@@ -54,10 +54,10 @@ export const CompetitionsView: React.FC<CompetitionsViewProps> = ({ currentUser 
 
             <div className="flex flex-wrap gap-3 pt-2">
               <a href="https://teknofest.org" target="_blank" rel="noreferrer" className="px-5 py-2.5 rounded-xl bg-white text-slate-900 font-bold text-sm shadow-md hover:bg-slate-100 transition-all flex items-center gap-2">
-                <ExternalLink className="w-4 h-4 text-red-600" /> teknofest.org
+                <ExternalLink className="w-4 h-4 text-red-600" /> TEKNOFEST Resmi Sitesi
               </a>
               <a href="https://t3kys.com" target="_blank" rel="noreferrer" className="px-5 py-2.5 rounded-xl bg-red-600 text-white font-bold text-sm shadow-md hover:bg-red-700 transition-all flex items-center gap-2">
-                <ExternalLink className="w-4 h-4" /> KYS Başvuru Portalı
+                <ExternalLink className="w-4 h-4" /> T3KYS
               </a>
             </div>
           </div>
