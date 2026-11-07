@@ -7,7 +7,6 @@ interface CommunityViewProps {
   currentUser: UserProfile | null;
 }
 
-// Şimdilik sabit kanallar, ileride veritabanından çekebiliriz
 const CHANNELS = [
   { id: 'genel', name: 'Genel Sohbet' },
   { id: 'yardim', name: 'Yardım & Destek' },
@@ -25,7 +24,6 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ currentUser }) => 
   useEffect(() => {
     fetchMessages();
 
-    // Supabase Realtime Aboneliği (Canlı Dinleme)
     const channel = supabase
       .channel('custom-all-channel')
       .on(
@@ -43,7 +41,6 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ currentUser }) => 
     };
   }, [activeChannel]);
 
-  // Yeni mesaj geldiğinde en alta kaydır
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -73,7 +70,7 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ currentUser }) => 
       content: newMessage.trim(),
     };
 
-    setNewMessage(''); // Hemen temizle
+    setNewMessage('');
 
     const { error } = await supabase.from('messages').insert([messageToInsert]);
     if (error) {
@@ -83,12 +80,11 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ currentUser }) => 
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 h-[calc(100vh-5rem)]">
-      <div className="bg-white rounded-3xl border border-slate-200 shadow-sm flex h-full overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex h-full overflow-hidden transition-colors">
 
-        {/* SOL SIDEBAR: Kanallar */}
-        <div className="w-64 bg-slate-50 border-r border-slate-200 flex flex-col">
-          <div className="p-4 border-b border-slate-200 bg-white">
-            <h2 className="font-black text-slate-900 flex items-center gap-2">
+        <div className="w-64 bg-slate-50 dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 flex flex-col">
+          <div className="p-4 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+            <h2 className="font-black text-slate-900 dark:text-white flex items-center gap-2">
               <Users className="w-5 h-5 text-red-600" />
               Topluluk
             </h2>
@@ -99,8 +95,8 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ currentUser }) => 
                 key={ch.id}
                 onClick={() => setActiveChannel(ch.id)}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeChannel === ch.id
-                    ? 'bg-red-100 text-red-700'
-                    : 'text-slate-600 hover:bg-slate-200'
+                    ? 'bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300'
+                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800'
                   }`}
               >
                 <Hash className="w-4 h-4" />
@@ -110,20 +106,19 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ currentUser }) => 
           </div>
         </div>
 
-        {/* SAĞ TARAF: Sohbet */}
-        <div className="flex-1 flex flex-col bg-white">
-          <div className="p-4 border-b border-slate-200 flex items-center shadow-sm z-10">
-            <Hash className="w-6 h-6 text-slate-400 mr-2" />
-            <h2 className="font-bold text-lg text-slate-900">
+        <div className="flex-1 flex flex-col bg-white dark:bg-slate-900">
+          <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center shadow-sm z-10">
+            <Hash className="w-6 h-6 text-slate-400 dark:text-slate-500 mr-2" />
+            <h2 className="font-bold text-lg text-slate-900 dark:text-white">
               {CHANNELS.find((c) => c.id === activeChannel)?.name}
             </h2>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-slate-50/50">
+          <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-slate-50/50 dark:bg-slate-950/50">
             {isLoading ? (
-              <div className="text-center text-slate-400 text-sm mt-10">Mesajlar yükleniyor...</div>
+              <div className="text-center text-slate-400 dark:text-slate-500 text-sm mt-10">Mesajlar yükleniyor...</div>
             ) : messages.length === 0 ? (
-              <div className="text-center text-slate-400 text-sm mt-10">
+              <div className="text-center text-slate-400 dark:text-slate-500 text-sm mt-10">
                 Bu kanalda henüz mesaj yok. İlk mesajı sen yaz!
               </div>
             ) : (
@@ -132,15 +127,15 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ currentUser }) => 
                 return (
                   <div key={msg.id} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-bold text-slate-700">{msg.sender_name}</span>
-                      <span className="text-[10px] text-slate-400 font-mono">
+                      <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{msg.sender_name}</span>
+                      <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono">
                         {new Date(msg.created_at).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
                     <div
                       className={`px-4 py-2.5 rounded-2xl max-w-md text-sm shadow-sm ${isMe
                           ? 'bg-red-600 text-white rounded-tr-sm'
-                          : 'bg-white border border-slate-200 text-slate-800 rounded-tl-sm'
+                          : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-tl-sm'
                         }`}
                     >
                       {msg.content}
@@ -152,9 +147,9 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ currentUser }) => 
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="p-4 border-t border-slate-200 bg-white">
+          <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
             {!currentUser ? (
-              <div className="text-center text-sm text-red-500 font-bold p-3 bg-red-50 rounded-xl">
+              <div className="text-center text-sm text-red-500 font-bold p-3 bg-red-50 dark:bg-red-950/40 rounded-xl">
                 Mesaj gönderebilmek için lütfen giriş yapın.
               </div>
             ) : (
@@ -164,12 +159,12 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ currentUser }) => 
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   placeholder={`#${activeChannel} kanalına mesaj yaz...`}
-                  className="flex-1 bg-slate-100 border-none rounded-full px-5 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/50"
+                  className="flex-1 bg-slate-100 dark:bg-slate-950 border border-transparent dark:border-slate-800 rounded-full px-5 py-3 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-colors"
                 />
                 <button
                   type="submit"
                   disabled={!newMessage.trim()}
-                  className="p-3 bg-red-600 hover:bg-red-700 disabled:bg-slate-300 text-white rounded-full transition-colors shadow-sm"
+                  className="p-3 bg-red-600 hover:bg-red-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 text-white rounded-full transition-colors shadow-sm"
                 >
                   <Send className="w-5 h-5" />
                 </button>

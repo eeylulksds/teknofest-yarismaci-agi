@@ -41,7 +41,7 @@ function App() {
         institution: profile.institution,
         bio: profile.bio,
         skills: profile.skills,
-        avatarUrl: profile.avatar_url, // <-- BURAYI EKLEDİK
+        avatarUrl: profile.avatar_url,
       });
     }
     setIsLoadingSession(false);
@@ -53,18 +53,18 @@ function App() {
     setIsAdminView(false);
   };
 
-  if (isLoadingSession) return <div className="min-h-screen flex items-center justify-center bg-slate-50">Yükleniyor...</div>;
+  if (isLoadingSession) return <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 text-slate-500 dark:text-slate-400 transition-colors">Yükleniyor...</div>;
 
   if (isAdminView) {
     return (
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors">
         <AdminPanelView onBackToSite={() => setIsAdminView(false)} currentUser={currentUser} />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans transition-colors">
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -88,7 +88,6 @@ function App() {
         onClose={() => setIsProfileModalOpen(false)}
         currentUser={currentUser}
         onUpdate={async () => {
-          // Profil kaydedildiğinde kullanıcı verisini Supabase'den tekrar çek
           const { data: { session } } = await supabase.auth.getSession();
           if (session?.user) {
             await fetchProfile(session.user.id, session.user.email);
