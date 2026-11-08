@@ -40,9 +40,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
 
-                    {/* Logo */}
+                    {/* Logo - ROKET EMOJİSİ İLE GÜNCELLENDİ */}
                     <div className="flex items-center gap-3 cursor-pointer" onClick={() => setActiveTab('competitions')}>
-                        <img src="/teknofest-logo.png" alt="TEKNOFEST" className="h-10 w-auto object-contain" />
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-orange-500 flex items-center justify-center text-xl shadow-sm">
+                            🚀
+                        </div>
                         <div className="flex flex-col">
                             <span className="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white leading-tight">TEKNOFEST Yarışmacı Ağı</span>
                         </div>
