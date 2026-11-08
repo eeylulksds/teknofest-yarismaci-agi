@@ -6,6 +6,8 @@ import { AdminPanelView } from './components/AdminPanelView';
 import { CommunityView } from './components/CommunityView';
 import { ForumView } from './components/ForumView';
 import { ProfileModal } from './components/ProfileModal';
+import { NotFound } from './components/NotFound';
+import { LoadingScreen } from './components/LoadingScreen'; // YENİ EKLENDİ
 import { supabase } from './supabaseClient';
 import type { UserProfile } from './utils/types';
 
@@ -16,6 +18,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [isLoadingSession, setIsLoadingSession] = useState(true);
   const [isAdminView, setIsAdminView] = useState(false);
+  const [is404, setIs404] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -27,6 +30,16 @@ function App() {
       else setCurrentUser(null);
     });
     return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const path = window.location.pathname;
+    const validPaths = ['/', '/forum', '/community', '/admin'];
+    if (!validPaths.includes(path)) {
+      setIs404(true);
+    } else {
+      setIs404(false);
+    }
   }, []);
 
   const fetchProfile = async (userId: string, email: string | undefined) => {
@@ -53,12 +66,32 @@ function App() {
     setIsAdminView(false);
   };
 
-  if (isLoadingSession) return <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 text-slate-500 dark:text-slate-400 transition-colors">Yükleniyor...</div>;
+  // YENİ: Artık düz yazı yerine LoadingScreen bileşenini kullanıyoruz
+  if (isLoadingSession) {
+    return <LoadingScreen />;
+  }
 
   if (isAdminView) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors">
         <AdminPanelView onBackToSite={() => setIsAdminView(false)} currentUser={currentUser} />
+      </div>
+    );
+  }
+
+  if (is404) {
+    return (
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans transition-colors">
+        <Navbar
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          onLoginClick={() => setIsAuthModalOpen(true)}
+          currentUser={currentUser}
+          onLogout={handleLogout}
+          onProfileClick={() => setIsProfileModalOpen(true)}
+          onOpenAdminPanel={() => setIsAdminView(true)}
+        />
+        <NotFound onGoHome={() => { window.history.pushState({}, '', '/'); setIs404(false); }} />
       </div>
     );
   }
@@ -81,7 +114,11 @@ function App() {
         {activeTab === 'community' && <CommunityView currentUser={currentUser} />}
       </main>
 
-      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} onLogin={(user) => setCurrentUser(user)} />
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onLogin={(user) => setCurrentUser(user)}
+      />
 
       <ProfileModal
         isOpen={isProfileModalOpen}

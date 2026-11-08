@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Trophy, Calendar, Clock, ExternalLink, Trash2, LayoutGrid, CalendarDays } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import { CompetitionCalendar } from './CompetitionCalendar';
+import { LoadingScreen } from './LoadingScreen'; // YENİ EKLENDİ
 import type { Competition, UserProfile } from '../utils/types';
 
 interface CompetitionsViewProps {
@@ -32,12 +33,12 @@ export const CompetitionsView: React.FC<CompetitionsViewProps> = ({ currentUser 
     else setCompetitions((prev) => prev.filter((c) => c.id !== id));
   };
 
-  if (isLoading) return <div className="text-center py-20 text-slate-500 dark:text-slate-400">Yarışmalar yükleniyor...</div>;
+  if (isLoading) return <LoadingScreen />;
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
 
-      {/* Üst Banner - Açık temada beyaz, koyu temada lacivert */}
+      {/* Üst Banner */}
       <div className="rounded-3xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 sm:p-10 shadow-sm mb-8 relative overflow-hidden transition-colors">
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-4 max-w-2xl">

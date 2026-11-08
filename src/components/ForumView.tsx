@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, MessageSquare, ThumbsUp } from 'lucide-react';
 import { supabase } from '../supabaseClient';
+import { LoadingScreen } from './LoadingScreen'; // YENİ EKLENDİ
 import type { UserProfile } from '../utils/types';
 
 interface ForumPost {
@@ -122,7 +123,7 @@ export const ForumView: React.FC<ForumViewProps> = ({ currentUser }) => {
       )}
 
       {isLoading ? (
-        <div className="text-center py-20 text-slate-500 dark:text-slate-400">Forum yükleniyor...</div>
+        <LoadingScreen />
       ) : posts.length === 0 ? (
         <div className="text-center py-20 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
           <MessageSquare className="w-12 h-12 text-slate-300 dark:text-slate-700 mx-auto mb-3" />

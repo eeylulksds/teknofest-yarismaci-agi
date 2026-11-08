@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Hash, Users, ChevronLeft } from 'lucide-react';
 import { supabase } from '../supabaseClient';
+import { LoadingScreen } from './LoadingScreen'; // YENİ EKLENDİ
 import type { ChatMessage, UserProfile } from '../utils/types';
 
 interface CommunityViewProps {
@@ -18,7 +19,7 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ currentUser }) => 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const [showMobileSidebar, setShowMobileSidebar] = useState(false); // Mobil için
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -104,8 +105,8 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ currentUser }) => 
                 key={ch.id}
                 onClick={() => { setActiveChannel(ch.id); setShowMobileSidebar(false); }}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeChannel === ch.id
-                    ? 'bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300'
-                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800'
+                  ? 'bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300'
+                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800'
                   }`}
               >
                 <Hash className="w-4 h-4" />
@@ -129,7 +130,7 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ currentUser }) => 
 
           <div className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-4 bg-slate-50/50 dark:bg-slate-950/50">
             {isLoading ? (
-              <div className="text-center text-slate-400 dark:text-slate-500 text-sm mt-10">Mesajlar yükleniyor...</div>
+              <LoadingScreen />
             ) : messages.length === 0 ? (
               <div className="text-center text-slate-400 dark:text-slate-500 text-sm mt-10">
                 Bu kanalda henüz mesaj yok. İlk mesajı sen yaz!
@@ -147,8 +148,8 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ currentUser }) => 
                     </div>
                     <div
                       className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-2xl max-w-[85%] sm:max-w-md text-sm shadow-sm ${isMe
-                          ? 'bg-red-600 text-white rounded-tr-sm'
-                          : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-tl-sm'
+                        ? 'bg-red-600 text-white rounded-tr-sm'
+                        : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-tl-sm'
                         }`}
                     >
                       {msg.content}
