@@ -164,7 +164,6 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ currentUser }) => 
               messages.map((msg) => {
                 const isMe = msg.sender_id === currentUser?.id;
                 const isEditing = editingMessageId === msg.id;
-                const canDelete = isMe || currentUser?.role === 'yonetici';
 
                 return (
                   <div key={msg.id} className={`flex flex-col group ${isMe ? 'items-end' : 'items-start'}`}>
