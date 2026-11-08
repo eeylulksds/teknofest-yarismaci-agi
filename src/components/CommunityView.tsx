@@ -9,13 +9,14 @@ interface CommunityViewProps {
 }
 
 const CHANNELS = [
+  { id: 'duyurular', name: '📢 Duyurular' },
   { id: 'genel', name: 'Genel Sohbet' },
   { id: 'yardim', name: 'Yardım & Destek' },
   { id: 'takim-arama', name: 'Takım Arkadaşı Arayanlar' },
 ];
 
 export const CommunityView: React.FC<CommunityViewProps> = ({ currentUser }) => {
-  const [activeChannel, setActiveChannel] = useState('genel');
+  const [activeChannel, setActiveChannel] = useState('duyurular');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -68,15 +69,18 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ currentUser }) => 
     setIsLoading(false);
   };
 
+  // Duyurular kanalında sadece yöneticiler mesaj gönderebilir
+  const canSendMessage = activeChannel !== 'duyurular' || currentUser?.role === 'yonetici';
+
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newMessage.trim() || !currentUser) return;
+    if (!newMessage.trim() || !currentUser || !canSendMessage) return;
 
     const messageToInsert = {
       group_id: activeChannel,
       sender_id: currentUser.id,
-      sender_name: currentUser.name,
-      sender_team: currentUser.teamName || 'Bireysel',
+      sender_name: activeChannel === 'duyurular' ? '📢 SİSTEM DUYURUSU' : currentUser.name,
+      sender_team: activeChannel === 'duyurular' ? 'TEKNOFEST Yönetimi' : (currentUser.teamName || 'Bireysel'),
       content: newMessage.trim(),
     };
 
@@ -158,7 +162,7 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ currentUser }) => 
               <LoadingScreen />
             ) : messages.length === 0 ? (
               <div className="text-center text-slate-400 dark:text-slate-500 text-sm mt-10">
-                Bu kanalda henüz mesaj yok. İlk mesajı sen yaz!
+                Bu kanalda henüz mesaj yok.
               </div>
             ) : (
               messages.map((msg) => {
@@ -226,6 +230,10 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ currentUser }) => 
             {!currentUser ? (
               <div className="text-center text-xs text-red-500 font-bold p-3 bg-red-50 dark:bg-red-950/40 rounded-xl">
                 Mesaj gönderebilmek için lütfen giriş yapın.
+              </div>
+            ) : !canSendMessage ? (
+              <div className="text-center text-xs text-slate-500 dark:text-slate-400 font-bold p-3 bg-slate-100 dark:bg-slate-800 rounded-xl">
+                Bu kanalda sadece yöneticiler duyuru yayınlayabilir.
               </div>
             ) : (
               <form onSubmit={handleSendMessage} className="flex items-center gap-2">

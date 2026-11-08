@@ -72,7 +72,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({ onBackToSite, cu
     const { data } = await supabase
       .from('messages')
       .select('*')
-      .eq('sender_name', '📢 SİSTEM DUYURUSU')
+      .eq('group_id', 'duyurular') // <-- DEĞİŞTİRİLDİ
       .order('created_at', { ascending: false });
     if (data) setAnnouncements(data as Announcement[]);
   };
@@ -99,8 +99,11 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({ onBackToSite, cu
     e.preventDefault();
     if (!currentUser) return;
     const { error } = await supabase.from('messages').insert([{
-      group_id: 'genel', sender_id: currentUser.id, sender_name: '📢 SİSTEM DUYURUSU',
-      sender_team: 'TEKNOFEST Yönetimi', content: newAnnouncementText
+      group_id: 'duyurular', // <-- DEĞİŞTİRİLDİ
+      sender_id: currentUser.id,
+      sender_name: '📢 SİSTEM DUYURUSU',
+      sender_team: 'TEKNOFEST Yönetimi',
+      content: newAnnouncementText
     }]);
     if (!error) {
       setAnnouncementSuccess(true); setNewAnnouncementText(''); fetchAnnouncements(); fetchStats();
