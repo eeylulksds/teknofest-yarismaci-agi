@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Hash, Users, ChevronLeft } from 'lucide-react';
+import { Send, Hash, Users, ChevronLeft, Edit3, Trash2, Check, X } from 'lucide-react';
 import { supabase } from '../supabaseClient';
-import { LoadingScreen } from './LoadingScreen'; // YENİ EKLENDİ
+import { LoadingScreen } from './LoadingScreen';
 import type { ChatMessage, UserProfile } from '../utils/types';
 
 interface CommunityViewProps {
@@ -21,6 +21,9 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ currentUser }) => 
   const [isLoading, setIsLoading] = useState(true);
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
 
+  const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
+  const [editingContent, setEditingContent] = useState('');
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -30,10 +33,15 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ currentUser }) => 
       .channel('custom-all-channel')
       .on(
         'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'messages', filter: `group_id=eq.${activeChannel}` },
+        { event: '*', schema: 'public', table: 'messages', filter: `group_id=eq.${activeChannel}` },
         (payload) => {
-          const newMsg = payload.new as ChatMessage;
-          setMessages((prev) => [...prev, newMsg]);
+          if (payload.eventType === 'INSERT') {
+            setMessages((prev) => [...prev, payload.new as ChatMessage]);
+          } else if (payload.eventType === 'UPDATE') {
+            setMessages((prev) => prev.map(m => m.id === payload.new.id ? payload.new as ChatMessage : m));
+          } else if (payload.eventType === 'DELETE') {
+            setMessages((prev) => prev.filter(m => m.id !== payload.old.id));
+          }
         }
       )
       .subscribe();
@@ -80,11 +88,28 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ currentUser }) => 
     }
   };
 
+  const handleUpdateMessage = async (id: string) => {
+    if (!editingContent.trim()) return;
+    const { error } = await supabase.from('messages').update({ content: editingContent.trim() }).eq('id', id);
+    if (!error) {
+      setEditingMessageId(null);
+      setEditingContent('');
+    } else {
+      alert('Güncellenemedi: ' + error.message);
+    }
+  };
+
+  const handleDeleteMessage = async (id: string) => {
+    if (!window.confirm('Bu mesajı silmek istediğinize emin misiniz?')) return;
+    const { error } = await supabase.from('messages').delete().eq('id', id);
+    if (error) alert('Silinemedi: ' + error.message);
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-0 sm:px-4 py-0 sm:py-6 h-[calc(100vh-4rem)] sm:h-[calc(100vh-6rem)]">
       <div className="bg-white dark:bg-slate-900 rounded-none sm:rounded-3xl border-0 sm:border border-slate-200 dark:border-slate-800 shadow-sm flex h-full overflow-hidden transition-colors relative">
 
-        {/* SOL SIDEBAR - Masaüstünde normal, mobilde açılır menü */}
+        {/* SOL SIDEBAR */}
         <div className={`
           w-full sm:w-64 bg-slate-50 dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 flex flex-col
           absolute sm:relative inset-0 z-20 transform transition-transform duration-300
@@ -138,22 +163,59 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ currentUser }) => 
             ) : (
               messages.map((msg) => {
                 const isMe = msg.sender_id === currentUser?.id;
+                const isEditing = editingMessageId === msg.id;
+                const canDelete = isMe || currentUser?.role === 'yonetici';
+
                 return (
-                  <div key={msg.id} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
+                  <div key={msg.id} className={`flex flex-col group ${isMe ? 'items-end' : 'items-start'}`}>
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{msg.sender_name}</span>
                       <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono">
                         {new Date(msg.created_at).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
-                    <div
-                      className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-2xl max-w-[85%] sm:max-w-md text-sm shadow-sm ${isMe
-                        ? 'bg-red-600 text-white rounded-tr-sm'
-                        : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-tl-sm'
-                        }`}
-                    >
-                      {msg.content}
-                    </div>
+
+                    {isEditing ? (
+                      <div className="flex items-center gap-2 w-full max-w-md">
+                        <input
+                          type="text"
+                          value={editingContent}
+                          onChange={(e) => setEditingContent(e.target.value)}
+                          className="flex-1 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm text-slate-900 dark:text-white"
+                        />
+                        <button onClick={() => handleUpdateMessage(msg.id)} className="p-2 rounded-full bg-emerald-100 text-emerald-600 hover:bg-emerald-200">
+                          <Check className="w-4 h-4" />
+                        </button>
+                        <button onClick={() => setEditingMessageId(null)} className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500">
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="relative flex items-center gap-2">
+                        <div
+                          className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-2xl max-w-[85%] sm:max-w-md text-sm shadow-sm ${isMe
+                            ? 'bg-red-600 text-white rounded-tr-sm'
+                            : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-tl-sm'
+                            }`}
+                        >
+                          {msg.content}
+                        </div>
+
+                        {/* Aksiyon Butonları - Sadece kendi mesajı veya yönetici ise görünür */}
+                        {(isMe || currentUser?.role === 'yonetici') && (
+                          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity absolute -left-16 top-1/2 -translate-y-1/2">
+                            {isMe && (
+                              <button onClick={() => { setEditingMessageId(msg.id); setEditingContent(msg.content); }} className="p-1 rounded text-slate-400 hover:text-slate-700 dark:hover:text-slate-200">
+                                <Edit3 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                            <button onClick={() => handleDeleteMessage(msg.id)} className="p-1 rounded text-red-400 hover:text-red-600">
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 );
               })
