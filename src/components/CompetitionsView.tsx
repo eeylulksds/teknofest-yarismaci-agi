@@ -44,7 +44,7 @@ export const CompetitionsView: React.FC<CompetitionsViewProps> = ({ currentUser 
           <div className="space-y-4 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white dark:bg-white/10 text-slate-600 dark:text-sky-200 text-xs font-bold border border-slate-200 dark:border-white/15 shadow-xs">
               <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-              TEKNOFEST 2026 Resmi Kategori ve Şartnameler
+              TEKNOFEST 2027 Resmi Kategori ve Şartnameler
             </div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white">
               Teknoloji Yarışmaları <span className="text-sky-600 dark:text-sky-400">ve Şartnameler</span>
