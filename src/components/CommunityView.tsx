@@ -9,7 +9,7 @@ interface CommunityViewProps {
 }
 
 const CHANNELS = [
-  { id: 'duyurular', name: '📢 Duyurular' },
+  { id: 'duyurular', name: 'Duyurular' },
   { id: 'genel', name: 'Genel Sohbet' },
   { id: 'yardim', name: 'Yardım & Destek' },
   { id: 'takim-arama', name: 'Takım Arkadaşı Arayanlar' },
@@ -79,7 +79,7 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ currentUser }) => 
     const messageToInsert = {
       group_id: activeChannel,
       sender_id: currentUser.id,
-      sender_name: activeChannel === 'duyurular' ? '📢 SİSTEM DUYURUSU' : currentUser.name,
+      sender_name: activeChannel === 'duyurular' ? 'SİSTEM DUYURUSU' : currentUser.name,
       sender_team: activeChannel === 'duyurular' ? 'TEKNOFEST Yönetimi' : (currentUser.teamName || 'Bireysel'),
       content: newMessage.trim(),
     };
